@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>User Details</title>
+
+    <link rel="stylesheet" href="css/user-details.css" />
+  </head>
+
+  <body>
+    <div class="details-page">
+      <a href="index.html" class="back-button"> ← Back to Users </a>
+
+      <h1>User Details</h1>
+
+
+      <div id="details-loading">
+        <div class="details-skeleton"></div>
+
+        <div class="details-skeleton-list"></div>
+
+        <div class="details-skeleton-list"></div>
+      </div>
+
+
+      <div id="details-error"></div>
+
+
+      <div id="user-details">
+        <div id="basic-info">
+          <img id="user-avatar" src="" alt="User Avatar" />
+
+          <h2 id="user-login"></h2>
+
+          <p>
+            ID:
+            <span id="user-id"></span>
+          </p>
+        </div>
+
+
+        <div class="details-section">
+          <h2>Followers</h2>
+
+          <div id="followers-container"></div>
+        </div>
+
+
+        <div class="details-section">
+          <h2>Repositories</h2>
+
+          <div id="repositories-container"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/user-details.js"></script>
+  </body>
+</html>
