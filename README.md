@@ -599,5 +599,345 @@ Fetches repositories of the selected user.
 8. Loading skeletons and error messages are shown during loading or when an API request fails.
 
 
+## Assignment 2
+
+# GitHub Users App — TypeScript Migration
+
+## Overview
+
+The GitHub Users App is a web application that fetches and displays users from the GitHub REST API. This project migrates the original JavaScript implementation to **TypeScript**, improving type safety, maintainability, and code organization while preserving the existing HTML and CSS.
+
+The application displays GitHub users with pagination, filtering, searching, sorting, and individual user details, including profile information, followers, and repositories.
+
+## Features
+
+- Fetch GitHub users using the GitHub REST API.
+- Display users with their avatars, usernames, and IDs.
+- Search users by username.
+- Filter users by minimum username length.
+- Sort usernames in ascending or descending order.
+- Paginate users with Previous, Next, and page-number controls.
+- View individual user profiles.
+- Display user followers and repositories.
+- Show loading skeletons while data is being fetched.
+- Handle API errors, including GitHub API rate limits.
+- Use TypeScript interfaces, generics, union types, and utility types.
+- Compile TypeScript source files into JavaScript.
+- Organize the application into reusable modules.
+
+## Technologies Used
+
+- HTML5
+- CSS3
+- TypeScript
+- JavaScript (compiled output)
+- GitHub REST API
+- TypeScript Compiler (`tsc`)
+
+## API Endpoints
+
+The application uses the following GitHub REST API endpoints:
+
+| Purpose | Endpoint |
+|---|---|
+| Fetch users | `https://api.github.com/users` |
+| Fetch a user's profile | `https://api.github.com/users/{username}` |
+| Fetch followers | `https://api.github.com/users/{username}/followers` |
+| Fetch repositories | `https://api.github.com/users/{username}/repos` |
+
+The GitHub API may enforce rate limits. If the limit is reached, the application displays an appropriate error message.
+
+## Project Structure
+
+```text
+GitHub-Users-App/
+│
+├── index.html
+├── user-details.html
+├── tsconfig.json
+├── package.json
+├── README.md
+│
+├── css/
+│   ├── style.css
+│   └── user-details.css
+│
+├── src/
+│   ├── app.ts
+│   ├── user-details.ts
+│   │
+│   ├── controllers/
+│   │   ├── users-controller.ts
+│   │   └── user-details-controller.ts
+│   │
+│   ├── dom/
+│   │   ├── ui-helper.ts
+│   │   ├── user-renderer.ts
+│   │   └── details-renderer.ts
+│   │
+│   ├── services/
+│   │   ├── api-helper.ts
+│   │   └── api-service.ts
+│   │
+│   ├── types/
+│   │   ├── github-user.ts
+│   │   ├── github-follower.ts
+│   │   ├── github-repository.ts
+│   │   ├── api-result.ts
+│   │   └── user-summary.ts
+│   │
+│   └── utils/
+│       ├── pagination.ts
+│       └── user-filters.ts
+│
+└── dist/
+    ├── app.js
+    ├── user-details.js
+    ├── ...
+```
+
+**Note:** The `dist/` directory contains the compiled JavaScript files generated from TypeScript. The exact generated files depend on the source files in `src/`. Keep this structure consistent with the actual project.
+
+## Setup and Installation
+
+### 1. Prerequisites
+
+Ensure that the following are installed:
+
+- [Node.js](https://nodejs.org/)
+- npm (included with Node.js)
+- A code editor such as Visual Studio Code
+
+### 2. Install Dependencies
+
+Open a terminal in the project directory and run:
+
+```bash
+npm install
+```
+
+### 3. Compile TypeScript
+
+Compile the TypeScript source files into JavaScript:
+
+```bash
+npx tsc
+```
+
+The compiler reads `tsconfig.json` and generates JavaScript files in the `dist/` directory.
+
+### 4. Run the Application
+
+Open `index.html` using a local development server, such as the **Live Server** extension in Visual Studio Code.
+
+Do not open the HTML file directly with a `file://` URL, because JavaScript modules may require a local server.
+
+The application loads the compiled JavaScript files from `dist/`.
+
+For example, the main page includes:
+
+```html
+<script type="module" src="dist/app.js"></script>
+```
+
+The user details page includes:
+
+```html
+<script type="module" src="dist/user-details.js"></script>
+```
+
+Whenever you modify a TypeScript file, run `npx tsc` again before testing the changes.
+
+## TypeScript Configuration
+
+The project uses the following compiler configuration:
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ES2020",
+    "moduleResolution": "Bundler",
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "strict": true,
+    "noImplicitAny": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
+}
+```
+
+### Important Compiler Options
+
+- **`target`**: Specifies the JavaScript version to generate.
+- **`module`**: Uses ES modules for imports and exports.
+- **`moduleResolution`**: Configures how TypeScript resolves imported modules.
+- **`rootDir`**: Identifies the directory containing TypeScript source files.
+- **`outDir`**: Specifies where compiled JavaScript files are generated.
+- **`strict`**: Enables strict type-checking options.
+- **`noImplicitAny`**: Prevents TypeScript from silently assigning the `any` type to implicitly typed values.
+- **`forceConsistentCasingInFileNames`**: Helps prevent import errors caused by inconsistent file-name casing.
+
+## TypeScript Migration
+
+The original JavaScript application was migrated to TypeScript while retaining the existing HTML and CSS.
+
+### 1. Interfaces
+
+Interfaces describe the structure of data received from the GitHub API.
+
+For example, the `GitHubUser` interface defines properties such as `login`, `id`, and `avatar_url`.
+
+```typescript
+export interface GitHubUser {
+  login: string;
+  id: number;
+  avatar_url: string;
+  html_url: string;
+  type: string;
+  site_admin: boolean;
+  name?: string | null;
+  public_repos?: number;
+}
+```
+
+The optional properties use `?` because some profile fields may be missing or `null` in API responses.
+
+Separate interfaces are used for GitHub users, followers, and repositories.
+
+### 2. Generic API Helper
+
+The generic API helper allows the same fetching logic to work with different response types.
+
+```typescript
+async function fetchData<T>(
+  url: string
+): Promise<T> {
+  // Fetch and process API response.
+}
+```
+
+The generic type parameter `T` allows callers to specify the expected response type, such as a user, a list of followers, or a list of repositories.
+
+The actual implementation also handles HTTP errors and API rate limits.
+
+### 3. Union Types
+
+The application uses a typed success/error result to represent API outcomes.
+
+Conceptually, the result has two possible forms:
+
+```typescript
+export type ApiResult<T> =
+  | { success: true; data: T }
+  | { success: false; error: string };
+```
+
+- On success, `data` contains the requested result.
+- On failure, `error` contains an error message.
+
+The `success` property allows TypeScript to distinguish the two cases safely.
+
+### 4. ApiService Class
+
+The `ApiService` class groups API operations into reusable methods, including:
+
+- `getUsers()`
+- `getUser(username)`
+- `getFollowers(username)`
+- `getRepositories(username)`
+
+This separates API communication from DOM manipulation and page logic.
+
+### 5. Type-Safe DOM Manipulation
+
+The DOM helper uses a generic type parameter to return a specific HTML element type.
+
+For example:
+
+```typescript
+getElement<HTMLInputElement>("login-length");
+```
+
+This allows the application to access input-specific properties, such as `.value`, with appropriate type checking.
+
+Event handlers, controller state, renderers, and utility functions also use explicit types.
+
+### 6. Utility Types: Pick and Omit
+
+TypeScript utility types allow new types to be derived from existing interfaces.
+
+**Pick** selects only the specified properties:
+
+```typescript
+export type UserSummary = Pick<
+  GitHubUser,
+  "login" | "id" | "avatar_url"
+>;
+```
+
+This type is used when rendering user cards, which only require a subset of the full user information.
+
+**Omit** excludes specified properties:
+
+```typescript
+export type UserProfileInfo = Omit<
+  GitHubUser,
+  "avatar_url"
+>;
+```
+
+The profile transformation utility uses this type to represent the remaining user information without the avatar URL.
+
+### 7. Composition and Modules
+
+The application is divided into modules with separate responsibilities:
+
+- **Controllers:** Manage page state, events, filtering, pagination, and loading.
+- **Services:** Handle API requests.
+- **DOM renderers:** Display users, profiles, followers, and repositories.
+- **Types:** Define API data and application result structures.
+- **Utilities:** Provide reusable filtering and pagination logic.
+
+This modular structure makes the application easier to understand, test, and maintain.
+
+### 8. Error Handling and Loading States
+
+The application uses `async`/`await` with `try`/`catch`/`finally` to manage asynchronous requests.
+
+- A loading skeleton is displayed while requests are in progress.
+- API errors are shown to the user.
+- GitHub rate-limit responses receive an appropriate error message.
+- The `finally` block hides the loading indicator whether the request succeeds or fails.
+
+## Application Workflow
+
+1. The browser loads the HTML page.
+2. The HTML imports the compiled JavaScript from `dist/`.
+3. The controller initializes event listeners and requests data through `ApiService`.
+4. The API helper fetches and processes the response.
+5. The controller checks the typed result and updates application state.
+6. Renderers display the data in the DOM.
+7. Search, filtering, sorting, and pagination update the visible user list.
+8. Selecting a user opens the details page, which fetches and displays profile information, followers, and repositories.
+
+## Screenshots
+
+
+
+### Users List Page
+
+![GitHub Users List](Screenshots/user-list.png)
+
+### User Details Page
+
+![GitHub User Details](Screenshots/user-details.png)
+
+### Loading Skeleton
+
+![Loading Skeleton](Screenshots/loading-skeleton.png)
 
 

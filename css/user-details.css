@@ -10,14 +10,10 @@ body {
     color: #222;
 }
 
-
-
 .details-page {
     max-width: 1000px;
     margin: 0 auto;
 }
-
-
 
 .back-button {
     display: inline-block;
@@ -34,15 +30,11 @@ body {
     background-color: #555;
 }
 
-
-
 h1 {
     text-align: center;
     margin: 0 0 25px;
     font-size: 38px;
 }
-
-
 
 #basic-info {
     background-color: white;
@@ -71,8 +63,6 @@ h1 {
     font-size: 15px;
 }
 
-
-
 .details-section {
     background-color: white;
     padding: 20px 25px;
@@ -86,16 +76,12 @@ h1 {
     font-size: 22px;
 }
 
-
-
 #followers-container,
 #repositories-container {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 15px;
 }
-
-
 
 .follower-card {
     padding: 15px;
@@ -117,11 +103,12 @@ h1 {
     font-weight: 600;
 }
 
-
 .repository-card {
     padding: 15px;
     background-color: #f5f7fa;
     border-radius: 10px;
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 .repository-card h3 {
@@ -133,41 +120,128 @@ h1 {
     margin: 0;
     color: #666;
     font-size: 14px;
+    line-height: 1.5;
 }
-
-
 
 #details-loading {
     display: block;
 }
 
-.details-skeleton {
-    height: 220px;
-    background-color: #e0e0e0;
+.details-skeleton-profile {
+    background-color: white;
+    padding: 25px;
     border-radius: 14px;
     margin-bottom: 25px;
-    animation: skeleton-loading 1.2s infinite alternate;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
 }
 
-.details-skeleton-list {
-    height: 150px;
-    background-color: #e0e0e0;
-    border-radius: 14px;
-    margin-bottom: 20px;
-    animation: skeleton-loading 1.2s infinite alternate;
+.skeleton {
+    position: relative;
+    overflow: hidden;
+    background-color: #e9edf2;
+    border-radius: 6px;
 }
 
-@keyframes skeleton-loading {
+.skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.8),
+        transparent
+    );
+    animation: skeleton-shimmer 1.5s infinite;
+}
 
-    from {
-        opacity: 0.5;
+.skeleton-profile-avatar {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+}
+
+.skeleton-profile-title {
+    width: 180px;
+    max-width: 70%;
+    height: 24px;
+}
+
+.skeleton-profile-text {
+    width: 90px;
+    height: 14px;
+}
+
+.details-skeleton-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 15px;
+}
+
+.details-skeleton-follower {
+    padding: 15px;
+    background-color: #f5f7fa;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.skeleton-follower-avatar {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+}
+
+.skeleton-follower-name {
+    width: 70%;
+    height: 12px;
+}
+
+.details-skeleton-repository {
+    min-height: 100px;
+    padding: 15px;
+    background-color: #f5f7fa;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    min-width: 0;
+}
+
+.skeleton-repository-title {
+    width: 75%;
+    height: 16px;
+}
+
+.skeleton-repository-text {
+    width: 100%;
+    height: 11px;
+}
+
+.skeleton-repository-text.short {
+    width: 55%;
+}
+
+@keyframes skeleton-shimmer {
+    100% {
+        transform: translateX(100%);
     }
-
-    to {
-        opacity: 1;
-    }
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .skeleton::after {
+        animation: none;
+    }
+}
 
 #details-error {
     display: none;
@@ -181,27 +255,34 @@ h1 {
     font-weight: 600;
 }
 
-
 @media (max-width: 800px) {
-
     body {
         padding: 20px;
     }
 
     #followers-container,
-    #repositories-container {
-        grid-template-columns: repeat(2, 1fr);
+    #repositories-container,
+    .details-skeleton-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
 @media (max-width: 500px) {
+    body {
+        padding: 15px;
+    }
 
     #followers-container,
-    #repositories-container {
+    #repositories-container,
+    .details-skeleton-grid {
         grid-template-columns: 1fr;
     }
 
     h1 {
         font-size: 30px;
+    }
+
+    .details-section {
+        padding: 18px;
     }
 }

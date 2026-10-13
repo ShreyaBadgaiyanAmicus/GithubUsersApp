@@ -1,0 +1,25 @@
+{
+  "name": "githubusersapp",
+  "version": "1.0.0",
+  "description": "Build a GitHub Users application using HTML, CSS, and vanilla JavaScript. API: https://api.github.com/users",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ShreyaBadgaiyanAmicus/GithubUsersApp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ShreyaBadgaiyanAmicus/GithubUsersApp/issues"
+  },
+  "homepage": "https://github.com/ShreyaBadgaiyanAmicus/GithubUsersApp#readme",
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  }
+}

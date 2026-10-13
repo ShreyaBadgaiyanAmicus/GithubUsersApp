@@ -138,6 +138,7 @@ function updateButtons() {
         pageNumbers.appendChild(pageButton);
     }
 }
+
 function applyFilters() {
   currentUsers = allUsers.filter((user) => {
     const matchesLength = user.login.length >= minimumLoginLength;
